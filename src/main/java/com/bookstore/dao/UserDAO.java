@@ -10,7 +10,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.bookstore.vo.Users;
+import com.bookstore.vo.User;
 
 @Repository
 public class UserDAO {
@@ -19,7 +19,7 @@ public class UserDAO {
 		private SessionFactory sessionFactory;
 		
 		@Transactional
-		public void addUser(Users user) {
+		public void addUser(User user) {
 				Session session = sessionFactory.getCurrentSession();
 				session.saveOrUpdate(user);
 		}

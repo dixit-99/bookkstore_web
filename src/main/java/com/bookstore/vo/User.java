@@ -9,8 +9,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "User")
-public class Users {
+@Table(name = "Users")
+public class User {
 		
 		@Id
 		@GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "user_Generator")

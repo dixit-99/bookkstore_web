@@ -65,7 +65,7 @@ public class Book {
 		
 		//seller Id
 		@ManyToOne
-		private Users user;
+		private User user;
 		
 		@Override
 		public String toString() {
@@ -205,11 +205,11 @@ public class Book {
 			this.subject = subject;
 		}
 
-		public Users getUser() {
+		public User getUser() {
 			return user;
 		}
 
-		public void setUser(Users user) {
+		public void setUser(User user) {
 			this.user = user;
 		}
 
