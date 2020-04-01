@@ -22,7 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.bookstore.dao.BookDAO;
 import com.bookstore.vo.Book;
-import com.bookstore.vo.User;
+import com.bookstore.vo.Users;
 import com.bookstore.vo.Wishlist;
 
 @Controller
@@ -126,7 +126,7 @@ public class BookController {
 		}
 		
 		@RequestMapping(value = "/addWish", method = RequestMethod.GET)
-		private ResponseEntity<Object> addWish(@RequestParam long userId, @RequestParam long bookId,@ModelAttribute Book book, @ModelAttribute User user, @ModelAttribute Wishlist wishlist) {
+		private ResponseEntity<Object> addWish(@RequestParam long userId, @RequestParam long bookId,@ModelAttribute Book book, @ModelAttribute Users user, @ModelAttribute Wishlist wishlist) {
 			user.setUserId(userId);
 			book.setBookId(bookId);
 			wishlist.setUser(user);
@@ -136,7 +136,7 @@ public class BookController {
 		}
 		
 		@RequestMapping(value = "/rmWish", method = RequestMethod.GET)
-		private ResponseEntity<Object> rmWish(@RequestParam long userId, @RequestParam long bookId,@ModelAttribute Book book, @ModelAttribute User user, @ModelAttribute Wishlist wishlist) {
+		private ResponseEntity<Object> rmWish(@RequestParam long userId, @RequestParam long bookId,@ModelAttribute Book book, @ModelAttribute Users user, @ModelAttribute Wishlist wishlist) {
 			user.setUserId(userId);
 			book.setBookId(bookId);
 			wishlist.setUser(user);

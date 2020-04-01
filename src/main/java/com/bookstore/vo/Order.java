@@ -34,7 +34,7 @@ public class Order {
 		
 		//buyerId
 		@ManyToOne
-		private User user;
+		private Users user;
 
 		@Override
 		public String toString() {
@@ -82,11 +82,11 @@ public class Order {
 			this.paymentMode = paymentMode;
 		}
 
-		public User getUser() {
+		public Users getUser() {
 			return user;
 		}
 
-		public void setUser(User user) {
+		public void setUser(Users user) {
 			this.user = user;
 		}
 }

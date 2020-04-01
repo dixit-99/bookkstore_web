@@ -1,1 +1,1 @@
-web: java -jar target/bookstore-0.0.1-SNAPSHOT.war
+web: java -jar target/bookkstore-0.0.1-SNAPSHOT.war

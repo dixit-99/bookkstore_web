@@ -19,7 +19,7 @@ public class Wishlist {
 		private long wishlistId;
 		
 		@ManyToOne
-		private User user;
+		private Users user;
 		
 		@ManyToOne
 		private Book book;
@@ -37,19 +37,19 @@ public class Wishlist {
 			this.wishlistId = wishlistId;
 		}
 		
-		public User getUser() {
-			return user;
-		}
-		
-		public void setUser(User user) {
-			this.user = user;
-		}
-		
 		public Book getBook() {
 			return book;
 		}
 		
 		public void setBook(Book book) {
 			this.book = book;
+		}
+
+		public Users getUser() {
+			return user;
+		}
+
+		public void setUser(Users user) {
+			this.user = user;
 		}
 }
