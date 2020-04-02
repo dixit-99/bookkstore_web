@@ -12,7 +12,7 @@
 				if(htp.readyState==4){
 					sub.innerHTML="";
 					var opn = document.createElement("option");
-					opn.text = "--Select--";
+					opn.text = "-- Select --";
 					opn.value = " ";
 					sub.options.add(opn);
 					var data = JSON.parse(htp.responseText);
