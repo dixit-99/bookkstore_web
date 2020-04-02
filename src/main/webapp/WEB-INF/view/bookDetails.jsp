@@ -96,13 +96,13 @@
 
             <div class="row justify-content-end wow fadeInLeft" style="margin-top: 102px;">
                 <div class="col-md-9">
-                    <img src="<%request.getContextPath();%>/documents/file/${book.frontImage}" style="height: 320px; width: 100%; border: 2px solid black;">
+                    <img src="userBooks/${book.frontImage}" style="height: 320px; width: 100%; border: 2px solid black;">
                 </div>
             </div>
 
             <div class="row justify-content-end wow fadeInLeft" style="margin-top: 15px;">
                 <div class="col-md-9">
-                    <img src="<%request.getContextPath();%>/documents/file/${book.backImage}" style="height: 320px; width: 100%; border: 2px solid black;">
+                    <img src="userBooks/${book.backImage}" style="height: 320px; width: 100%; border: 2px solid black;">
                 </div>
             </div>
 

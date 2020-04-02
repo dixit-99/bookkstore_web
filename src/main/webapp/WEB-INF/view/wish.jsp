@@ -45,7 +45,7 @@
 			<div id="d${cnt.count}" class="d3 container wow fadeInUp">
 				<div class="row">
 					<div class="imgDiv col-md-4" onclick="bookDetails(${wish.book.bookId})">
-			  			<img src="<%request.getContextPath();%>/documents/file/${wish.book.frontImage}" alt="BookImage">
+			  			<img src="userBooks/${wish.book.frontImage}" alt="BookImage">
 			  		</div>
 			  		
 					<div class="imgDiv col-md-7" onclick="bookDetails(${wish.book.bookId})">
