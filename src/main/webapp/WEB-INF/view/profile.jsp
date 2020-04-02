@@ -36,12 +36,12 @@
         <div class="row justify-content-center wow fadeInDown" style="margin-top: 15px;">
         	<c:if test="${f:startsWith(user.gender,'m')}">
 	            <div class="col-md-5">
-	                <img src="resources/img/man.svg" style="height: 260px; width: 100%;">
+	                <img src="img/man.svg" style="height: 260px; width: 100%;">
 	            </div>
             </c:if>
             <c:if test="${f:startsWith(user.gender,'f')}">
 	            <div class="col-md-5">
-	                <img src="resources/img/woman.svg" style="height: 260px; width: 100%;">
+	                <img src="img/woman.svg" style="height: 260px; width: 100%;">
 	            </div>
             </c:if>
         </div>

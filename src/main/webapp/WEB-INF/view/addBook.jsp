@@ -7,7 +7,7 @@
 	<meta charset="ISO-8859-1">
 	<title>Bookstore - Add Book</title>
 	<jsp:include page="head.jsp"></jsp:include>
-	<script src="resources/js/addBook.js"></script>
+	<script src="js/addBook.js"></script>
 	<style>
         body {
             font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
@@ -27,11 +27,11 @@
         <div class="row" style="margin-top: 15px;">
             <div class="col-md-2"></div>
             <div class="col-md-3 wow fadeInLeft" style="border: 1px solid cornflowerblue;">
-                <img id="f" src="resources/img/front.jpg" style="height: 300px; width: 100%;">
+                <img id="f" src="img/front.jpg" style="height: 300px; width: 100%;">
             </div>
             <div class="col-md-2"></div>
             <div class="col-md-3 wow fadeInRight" style="border: 1px solid cornflowerblue;">
-                <img id="b" src="resources/img/back.jpg" style="height: 300px; width: 100%;">
+                <img id="b" src="img/back.jpg" style="height: 300px; width: 100%;">
             </div>
             <div class="col-md-2"></div>
         </div>

@@ -47,8 +47,8 @@
 					</div>
 					
 					<div class="imgDiv col-md-1">
-						<img src="resources/img/delete.svg" style="height: 25px; margin-left: -80px; margin-top: 15px;" onclick="rmWish(${sessionScope.user},${wish.book.bookId},'d${cnt.count}')"><br>
-						<img src="resources/img/editBook.svg" style="height: 25px; margin-left: -80px; margin-top: 15px;" onclick="rmWish(${sessionScope.user},${wish.book.bookId},'d${cnt.count}')">
+						<img src="img/delete.svg" style="height: 25px; margin-left: -80px; margin-top: 15px;" onclick="rmWish(${sessionScope.user},${wish.book.bookId},'d${cnt.count}')"><br>
+						<img src="img/editBook.svg" style="height: 25px; margin-left: -80px; margin-top: 15px;" onclick="rmWish(${sessionScope.user},${wish.book.bookId},'d${cnt.count}')">
 					</div>
 				</div>
 			</div>
@@ -56,7 +56,7 @@
 	</c:if>
 	<c:if test="${sellingList.size() eq 0}">
 		<div class="row justify-content-center wow fadeInUp">
-			<img src="resources/img/book.svg">
+			<img src="img/book.svg">
 		</div>
 		
 		<div class="row justify-content-center wow fadeInUp" style="font-size: 30px; margin-top: 15px;">
