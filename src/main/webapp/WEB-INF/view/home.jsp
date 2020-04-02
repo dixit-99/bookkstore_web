@@ -82,6 +82,11 @@
 			}	
 			
 			function bookDetails(bookId) {
+				
+				var htp=new XMLHttpRequest();
+				htp.open("get","/incrementViews?bookId="+bookId,true);
+				htp.send();
+				
 				window.location.href = '/bookDetails?bookId='+bookId;
 			}
 			
@@ -130,6 +135,7 @@
 	<div class="d2"></div>
 	
 	<div id="here">
+	<c:if test="${sessionScope.bookList.size() gt 0}">
 	<c:forEach items="${sessionScope.bookList}" var="book" varStatus="cnt">
 		<%-- <c:if test="${cnt.count%2 ne 0}">
 		<div class="d3 container wow fadeInLeft">
@@ -164,6 +170,16 @@
 			</div>
 		</div>
 	</c:forEach>
+	</c:if>
+	<c:if test="${sessionScope.bookList.size() eq 0}">
+		<div class="row justify-content-center wow fadeInUp">
+			<img src="img/emptyBookList.svg">
+		</div>
+		
+		<div class="row justify-content-center wow fadeInUp" style="font-size: 30px;margin-right: 10px; margin-top: 15px;">
+			 Not Have Any Books
+		</div>
+	</c:if>
 	</div>
 	
 	<div class="modal fade" id="sort">

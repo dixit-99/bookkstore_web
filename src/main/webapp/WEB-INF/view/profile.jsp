@@ -77,12 +77,14 @@
 
         <div class="row justify-content-center wow fadeInUp" style="margin-left: 30px;">
             <div class="col-md-2">
-            	<a href="/editUser?userId=${user.userId}">
+            	<%-- <a href="/editUser?userId=${user.userId}"> --%>
                 	<button class="btn btn-outline-primary">Edit Details</button>
-                </a>
+                <!-- </a> -->
             </div>
             <div class="col-md-2">
-                <button class="btn btn-outline-danger">Logout</button>
+            	<a href="/logout">
+                	<button class="btn btn-outline-danger">Logout</button>
+                </a>
             </div>
         </div>
     </div>

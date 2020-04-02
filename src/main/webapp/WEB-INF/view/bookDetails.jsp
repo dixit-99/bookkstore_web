@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -51,6 +52,22 @@
 			htp.open("get","/rmWish?userId="+userId+"&bookId="+bookId,true);
 			htp.send();
 		}
+		
+		function order() {
+			$("#buyNow").modal("hide");
+			$("#order").modal({backdrop: "static"});
+		}
+		
+		function orderConfirmed(bookId) {
+			$("#order").modal("hide");
+			
+			var htp=new XMLHttpRequest();
+			htp.onreadystatechange=function(){
+				window.location.href = '/home';
+			}
+			htp.open("get","/orderBook?bookId="+bookId,true);
+			htp.send();
+		}
 		</script>
 </head>
 <body>
@@ -61,15 +78,19 @@
                 BOOK DETAILS
             </div>
         </div>
+        
+        <c:if test="${!(sessionScope.noBuy ne null)}">
         <div class="row justify-content-center">
           <div class="col-md-6">
             <div class="row filter">
               <div id="add" class="col-md-6" onclick="addWish(${sessionScope.user},${book.bookId})"> Add To Wishlist </div>
               <div id="rm" class="col-md-6" onclick="rmWish(${sessionScope.user},${book.bookId})" style="display: none"> Remove From Wishlist </div>
-              <div class="col-md-6" > Buy Now </div>
+              <div class="col-md-6" data-toggle="modal" data-target="#buyNow" data-backdrop="static"> Buy Now </div>
             </div>
           </div>
         </div>
+        </c:if>
+        <c:remove var="noBuy" scope="session"/>
 
         <div style="width: 35%; float: left;">
 
@@ -161,6 +182,49 @@
               </div>
         </div>
 	</div>
+	
+	<div class="modal fade" id="buyNow">
+	    <div class="modal-dialog" style="width: 420px;">
+	      <div class="modal-content">
+	      
+	        <div class="modal-header justify-content-center">
+			  <h4 class="modal-title text-primary">Buy Now</h4>
+	        </div>
+	        
+	        <div class="modal-body justify-content-center">
+				Are You Sure..! &nbsp; You Want To Buy This Book ??
+	        </div>
+	        
+	        <div class="modal-footer justify-content-center">
+				<button type="button" class="col-4 btn btn-outline-danger" data-dismiss="modal"> Cancel </button>
+			    <button type="button" class="col-4 btn btn-outline-primary" onclick="order()"> Confirm </button>
+	        </div>
+	        
+	      </div>
+	    </div>
+	</div>
+	
+	<div class="modal fade" id="order">
+	    <div class="modal-dialog" style="width: 450px;">
+	      <div class="modal-content">
+	      
+	        <div class="modal-header justify-content-center">
+			  <h4 class="modal-title text-primary">Order Confirmed</h4>
+	        </div>
+	        
+	        <div class="modal-body justify-content-center">
+				Please Confirm Your Deal By Communicating With The Seller. <br>
+				<b style="color: #fc5705"> Seller Mobile No : ${book.user.mobileNo} </b>
+	        </div>
+	        
+	        <div class="modal-footer justify-content-center">
+			    <button type="button" class="col-4 btn btn-outline-primary" onclick="orderConfirmed(${book.bookId})"> Okay </button>
+	        </div>
+	        
+	      </div>
+	    </div>
+	</div>
+	
 	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
 	<script>

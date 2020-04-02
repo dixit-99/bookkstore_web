@@ -21,7 +21,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.bookstore.dao.BookDAO;
+import com.bookstore.dao.UserDAO;
 import com.bookstore.vo.Book;
+import com.bookstore.vo.Order;
 import com.bookstore.vo.User;
 import com.bookstore.vo.Wishlist;
 
@@ -31,13 +33,20 @@ public class BookController {
 		@Autowired
 		private BookDAO bookDAO;
 		
+		@Autowired
+		private UserDAO userDAO;
+		
 		@RequestMapping(value = "/home", method = RequestMethod.GET)
 		private ModelAndView home(HttpSession session) {
-			if(!(session.getAttribute("filter") != null) && !(session.getAttribute("sort") != null))
-				session.setAttribute("bookList", bookDAO.getBooks(session.getAttribute("user")));
-			session.removeAttribute("filter");
-			session.removeAttribute("sort");
-			return new ModelAndView("home");
+			if(session.getAttribute("user") != null) {
+				if(!(session.getAttribute("filter") != null) && !(session.getAttribute("sort") != null))
+					session.setAttribute("bookList", bookDAO.getBooks(session.getAttribute("user")));
+				session.removeAttribute("filter");
+				session.removeAttribute("sort");
+				return new ModelAndView("home");
+			}
+			session.setAttribute("required",true);
+			return new ModelAndView("redirect:/");
 		}
 		
 		@RequestMapping(value = "/applyFilter", method = RequestMethod.GET)
@@ -115,8 +124,65 @@ public class BookController {
 		}
 		
 		@RequestMapping(value = "/addBook", method = RequestMethod.GET)
-		private ModelAndView addBook() {
-			return new ModelAndView("addBook","book",new Book());
+		private ModelAndView addBook(HttpSession session) {
+			if(session.getAttribute("user") != null) {
+				return new ModelAndView("addBook","book",new Book());
+			}
+			session.setAttribute("required",true);
+			return new ModelAndView("redirect:/");
+		}
+		
+		@RequestMapping(value = "/editBook", method = RequestMethod.GET)
+		private ModelAndView editBook(@RequestParam long bookId, HttpSession session) {
+			if(session.getAttribute("user") != null) {
+				Book book = (Book)bookDAO.getBook(bookId).get(0);
+				return new ModelAndView("addBook","book",book);
+			}
+			session.setAttribute("required",true);
+			return new ModelAndView("redirect:/");
+		}
+		
+		@RequestMapping(value = "/deleteBook", method = RequestMethod.GET)
+		private ResponseEntity<Object> deleteBook(@RequestParam long bookId,@ModelAttribute Book book , HttpSession session) {
+			book.setBookId(bookId);
+			bookDAO.deleteBook(book);
+			List sellingList = userDAO.getSellingList(Long.parseLong(session.getAttribute("user").toString()));
+			return new ResponseEntity<Object>(null,HttpStatus.OK);
+		}
+		
+		@RequestMapping(value = "/soldBook", method = RequestMethod.GET)
+		private ResponseEntity<Object> soldBook(@RequestParam long bookId,@ModelAttribute Book book , HttpSession session) {
+			book = (Book)bookDAO.getBook(bookId).get(0);
+			book.setStatus(false);
+			bookDAO.addBook(book);
+			List sellingList = userDAO.getSellingList(Long.parseLong(session.getAttribute("user").toString()));
+			return new ResponseEntity<Object>(null,HttpStatus.OK);
+		}
+		
+		@RequestMapping(value = "/sellBook", method = RequestMethod.GET)
+		private ResponseEntity<Object> sellBook(@RequestParam long bookId,@ModelAttribute Book book , HttpSession session) {
+			book = (Book)bookDAO.getBook(bookId).get(0);
+			book.setStatus(true);
+			bookDAO.addBook(book);
+			List sellingList = userDAO.getSellingList(Long.parseLong(session.getAttribute("user").toString()));
+			return new ResponseEntity<Object>(null,HttpStatus.OK);
+		}
+		
+		@RequestMapping(value = "/orderBook", method = RequestMethod.GET)
+		private ResponseEntity<Object> orderBook(@RequestParam long bookId,@ModelAttribute Book book, @ModelAttribute User user, @ModelAttribute Order order, HttpSession session) {
+			book.setBookId(bookId);
+			user.setUserId(Long.parseLong(session.getAttribute("user").toString()));
+			order.setBook(book);
+			order.setUser(user);
+			bookDAO.orderBook(order);
+			return new ResponseEntity<Object>(null,HttpStatus.OK);
+		}
+		
+		@RequestMapping(value = "/deleteOrder", method = RequestMethod.GET)
+		private ResponseEntity<Object> deleteOrder(@RequestParam long orderId ,@ModelAttribute Order order) {
+			order.setOrderId(orderId);
+			bookDAO.deleteOrder(order);
+			return new ResponseEntity<Object>(null,HttpStatus.OK);
 		}
 		
 		@RequestMapping(value = "/getSubject", method = RequestMethod.GET)
@@ -146,40 +212,72 @@ public class BookController {
 		}
 		
 		@RequestMapping(value = "/bookDetails", method = RequestMethod.GET)
-		private ModelAndView bookDetails(@RequestParam long bookId) {
-			Book book = (Book)bookDAO.bookDetails(bookId).get(0);
-			return new ModelAndView("bookDetails","book",book);
+		private ModelAndView bookDetails(@RequestParam long bookId, HttpSession session) {			
+			if(session.getAttribute("user") != null) {
+				Book book = (Book)bookDAO.bookDetails(bookId).get(0);
+				return new ModelAndView("bookDetails","book",book);
+			}
+			session.setAttribute("required",true);
+			return new ModelAndView("redirect:/");
+		}
+		
+		@RequestMapping(value = "/bookkDetails", method = RequestMethod.GET)
+		private ModelAndView bookkDetails(@RequestParam long bookId,HttpSession session) {
+			if(session.getAttribute("user") != null) {
+				Book book = (Book)bookDAO.bookDetails(bookId).get(0);
+				session.setAttribute("noBuy", true);
+				return new ModelAndView("bookDetails","book",book);
+			}
+			session.setAttribute("required",true);
+			return new ModelAndView("redirect:/");
+		}
+		
+		@RequestMapping(value = "/incrementViews", method = RequestMethod.GET)
+		private ResponseEntity<Object> incrementViews(@RequestParam long bookId,@ModelAttribute Book book) {
+			book = (Book)bookDAO.getBook(bookId).get(0);
+			int views = book.getViews();
+			views++;
+			book.setViews(views);
+			bookDAO.addBook(book);
+			return new ResponseEntity<Object>(null,HttpStatus.OK);
 		}
 		
 		@RequestMapping(value = "/addBookk", method = RequestMethod.POST)
-		private ModelAndView addBookk(@ModelAttribute Book book, @RequestParam MultipartFile front,@RequestParam MultipartFile back, HttpServletRequest req) {
-			String frontName = front.getOriginalFilename();
-			String backName = back.getOriginalFilename();
-			String filePath = req.getSession().getServletContext().getRealPath("/");
-			filePath += "documents\\file\\";
-			book.setFrontImage(frontName);
-			book.setBackImage(backName);
+		private ModelAndView addBookk(@ModelAttribute Book book, @RequestParam MultipartFile front,@RequestParam MultipartFile back, HttpServletRequest req, HttpSession session) {
 			
-			int originalPrice = book.getOriginalPrice();
-			int sellingPrice = book.getSellingPrice();
-			int discount =  ( (originalPrice - sellingPrice) * 100 ) / originalPrice;
-			book.setDiscount(discount);
-			
-			try {
-				byte f[] = front.getBytes();
-				byte b[] = back.getBytes();
-				BufferedOutputStream frontImage = new BufferedOutputStream(new FileOutputStream(filePath+"\\"+frontName));
-				BufferedOutputStream backImage = new BufferedOutputStream(new FileOutputStream(filePath+"\\"+backName));
-				frontImage.write(f);
-				backImage.write(b);
-		        frontImage.close();
-		        backImage.close();
-		        
-		        bookDAO.addBook(book);
+			if(session.getAttribute("user") != null) {
+				
+				String frontName = front.getOriginalFilename();
+				String backName = back.getOriginalFilename();
+				String filePath = req.getSession().getServletContext().getRealPath("/");
+				filePath += "documents\\file\\";
+				book.setFrontImage(frontName);
+				book.setBackImage(backName);
+				
+				int originalPrice = book.getOriginalPrice();
+				int sellingPrice = book.getSellingPrice();
+				int discount =  ( (originalPrice - sellingPrice) * 100 ) / originalPrice;
+				book.setDiscount(discount);
+				
+				try {
+					byte f[] = front.getBytes();
+					byte b[] = back.getBytes();
+					BufferedOutputStream frontImage = new BufferedOutputStream(new FileOutputStream(filePath+"\\"+frontName));
+					BufferedOutputStream backImage = new BufferedOutputStream(new FileOutputStream(filePath+"\\"+backName));
+					frontImage.write(f);
+					backImage.write(b);
+			        frontImage.close();
+			        backImage.close();
+			        
+			        bookDAO.addBook(book);
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+				return new ModelAndView("sell");
+				
 			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-			return new ModelAndView("sell");
+			session.setAttribute("required",true);
+			return new ModelAndView("redirect:/");
 		}
 }

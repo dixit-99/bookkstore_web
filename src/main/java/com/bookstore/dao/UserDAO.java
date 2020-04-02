@@ -49,6 +49,14 @@ public class UserDAO {
 		}
 		
 		@Transactional
+		public List getOrders(long userId) {
+				Session session = sessionFactory.getCurrentSession();
+				Query query = session.createQuery("from Order where user = "+userId);
+				List ls = query.list();
+				return ls;
+		}
+		
+		@Transactional
 		public List getSellingList(long userId) {
 				Session session = sessionFactory.getCurrentSession();
 				Query query = session.createQuery("from Book where user = "+userId);

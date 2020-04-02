@@ -7,9 +7,46 @@
 		<meta charset="ISO-8859-1">
 		<title>Bookstore - Sell</title>
 		<jsp:include page="head.jsp"></jsp:include>
+		<script>
+			function bookDetails(bookId) {
+				window.location.href = '/bookkDetails?bookId='+bookId;
+			}
+			
+			function deleteBook(bookId) {
+				var htp=new XMLHttpRequest();
+				htp.onreadystatechange=function(){
+					if(htp.readyState==4){
+						$("#here").load(" #here > *");
+					}
+				}
+				htp.open("get","/deleteBook?bookId="+bookId,true);
+				htp.send();
+			}
+			
+			function sold(bookId) {
+				var htp=new XMLHttpRequest();
+				htp.onreadystatechange=function(){
+					if(htp.readyState==4){
+						$("#here").load(" #here > *");
+					}
+				}
+				htp.open("get","/soldBook?bookId="+bookId,true);
+				htp.send();
+			}
+			
+			function sell(bookId) {
+				var htp=new XMLHttpRequest();
+				htp.onreadystatechange=function(){
+					if(htp.readyState==4){
+						$("#here").load(" #here > *");
+					}
+				}
+				htp.open("get","/sellBook?bookId="+bookId,true);
+				htp.send();
+			}
+		</script>
 </head>
 <body>
-	<!-- <a href="/addBook"><button type="button" class="btn btn-outline-primary">Add Book</button></a><br><br> -->
 	
 	<div class="container">
 		<jsp:include page="menu.jsp"></jsp:include>
@@ -40,15 +77,29 @@
 							<span style="color: grey;font-size: 13px"><del>${book.originalPrice}</del></span>
 							<span style="color: rgb(7, 119, 249);font-size:15px"><strong>${book.discount}% off</strong></span>
 						</div>
-						<span class="badge badge-primary">${book.authorName}</span>
-						<span class="badge badge-primary">${book.publication}</span>
-						<span class="badge badge-primary">SEM ${book.subject.semester}</span>
-						<span class="badge" style="background-color: #fc5705; color: white"> <i class="fa fa-eye"></i> ${book.views} </span>
+						
+						<c:if test="${book.status eq true}">
+							<span style="color:#fc5705; font-size: 22px; padding-left: 10px;"> Waiting For Buyer... </span><br>
+						</c:if>
+						
+						<c:if test="${book.status eq false}">
+							<span style="color:#fc5705; font-size: 22px; padding-left: 10px;"> Delivered <i class="fa fa-check-circle" aria-hidden="true"></i> </span><br>
+						</c:if>
+						
+						<acronym title="Users Seen This Book ${book.views} Times"><span class="badge" style="background-color: #fc5705; color: white"><i class="fa fa-eye"></i> ${book.views} </span></acronym>
 					</div>
 					
 					<div class="imgDiv col-md-1">
-						<img src="img/delete.svg" style="height: 25px; margin-left: -80px; margin-top: 15px;" onclick="rmWish(${sessionScope.user},${wish.book.bookId},'d${cnt.count}')"><br>
-						<img src="img/editBook.svg" style="height: 25px; margin-left: -80px; margin-top: 15px;" onclick="rmWish(${sessionScope.user},${wish.book.bookId},'d${cnt.count}')">
+						<acronym title="Delete The Book"><img src="img/delete.svg" style="height: 25px; margin-left: -80px; margin-top: 15px;" onclick="deleteBook(${book.bookId})"><br></acronym>
+						<acronym title="Edit Book Details"><%-- <a href="/editBook?bookId=${book.bookId}"> --%><img src="img/editBook.svg" style="height: 30px; margin-left: -75px; margin-top: 7px;")"><!-- </a> --></acronym>
+						
+						<c:if test="${book.status eq true}">
+							<acronym title="Mark As Sold"><img src="img/sold.svg" style="height: 30px; margin-left: -75px; margin-top: 30px;")" onclick="sold(${book.bookId})"></acronym>
+						</c:if>
+						
+						<c:if test="${book.status eq false}">
+							<acronym title="Mark For Sell"><img src="img/sell.svg" style="height: 30px; margin-left: -75px; margin-top: 30px;")" onclick="sell(${book.bookId})"></acronym>
+						</c:if>
 					</div>
 				</div>
 			</div>
@@ -60,9 +111,13 @@
 		</div>
 		
 		<div class="row justify-content-center wow fadeInUp" style="font-size: 30px; margin-top: 15px;">
-			 Yet Not Added Any Books
+			 Not Added Any Books Yet
 		</div>
 	</c:if>
+	</div>
+	
+	<div class="wow fadeInUp" style="position: absolute; top: 10%; right:15%;">
+		<acronym title="Add New Book For Sell"><a href="/addBook"><img src="img/addBook.svg" style="height: 100px;"></a></acronym>
 	</div>
 	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
