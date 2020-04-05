@@ -250,7 +250,7 @@ public class BookController {
 				String frontName = front.getOriginalFilename();
 				String backName = back.getOriginalFilename();
 				String filePath = req.getSession().getServletContext().getRealPath("/");
-				filePath += "userBooks\\";
+				filePath = "userBooks\\";
 				book.setFrontImage(frontName);
 				book.setBackImage(backName);
 				
