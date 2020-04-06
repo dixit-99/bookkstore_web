@@ -200,8 +200,8 @@
 				</div>
 				
 				<div class="imgDiv col-md-1">
-					<img id="h${cnt.count}" src="resources/img/heart.svg" alt="BookImage" style="height: 25px; margin-left: -80px; margin-top: 15px;" onclick="addWish(${sessionScope.user},${book.bookId},'h${cnt.count}','w${cnt.count}')">
-					<img id="w${cnt.count}" src="resources/img/wishlist.svg" alt="BookImage" style="height: 25px; margin-left: -80px; margin-top: 15px; display: none" onclick="rmWish(${sessionScope.user},${book.bookId},'h${cnt.count}','w${cnt.count}')">
+					<img id="h${cnt.count}" src="img/heart.svg" alt="BookImage" style="height: 25px; margin-left: -80px; margin-top: 15px;" onclick="addWish(${sessionScope.user},${book.bookId},'h${cnt.count}','w${cnt.count}')">
+					<img id="w${cnt.count}" src="img/wishlist.svg" alt="BookImage" style="height: 25px; margin-left: -80px; margin-top: 15px; display: none" onclick="rmWish(${sessionScope.user},${book.bookId},'h${cnt.count}','w${cnt.count}')">
 				</div>
 			</div>
 		</div>
