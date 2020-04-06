@@ -147,7 +147,7 @@
 		<div class="d3 container wow fadeInUp">
 			<div class="row">
 				<div class="imgDiv col-md-4" onclick="bookDetails(${book.bookId})">
-		  			<img src="userBooks/${book.frontImage}" alt="BookImage">
+		  			<img src="${book.frontImage}" alt="BookImage">
 		  		</div>
 		  		
 				<div class="imgDiv col-md-7" onclick="bookDetails(${book.bookId})">

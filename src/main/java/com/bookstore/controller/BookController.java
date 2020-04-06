@@ -4,7 +4,9 @@ import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -26,6 +28,8 @@ import com.bookstore.vo.Book;
 import com.bookstore.vo.Order;
 import com.bookstore.vo.User;
 import com.bookstore.vo.Wishlist;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 
 @Controller
 public class BookController {
@@ -39,10 +43,11 @@ public class BookController {
 		@RequestMapping(value = "/home", method = RequestMethod.GET)
 		private ModelAndView home(HttpSession session) {
 			if(session.getAttribute("user") != null) {
-				if(!(session.getAttribute("filter") != null) && !(session.getAttribute("sort") != null))
+				if(!(session.getAttribute("filter") != null) && !(session.getAttribute("sort") != null) && !(session.getAttribute("search") != null))
 					session.setAttribute("bookList", bookDAO.getBooks(session.getAttribute("user")));
 				session.removeAttribute("filter");
 				session.removeAttribute("sort");
+				session.removeAttribute("search");
 				return new ModelAndView("home");
 			}
 			session.setAttribute("required",true);
@@ -53,6 +58,13 @@ public class BookController {
 		private ResponseEntity<Object> applyFilter(@RequestParam int subjectId, HttpSession session) {
 			session.setAttribute("filter", true);
 			session.setAttribute("bookList", bookDAO.applyFilter(subjectId));
+			return new ResponseEntity<Object>(null,HttpStatus.OK);
+		}
+		
+		@RequestMapping(value = "/search", method = RequestMethod.GET)
+		private ResponseEntity<Object> search(@RequestParam String bookName, HttpSession session) {
+			session.setAttribute("search", true);
+			session.setAttribute("bookList", bookDAO.search(bookName,session.getAttribute("user")));
 			return new ResponseEntity<Object>(null,HttpStatus.OK);
 		}
 
@@ -246,36 +258,37 @@ public class BookController {
 		private ModelAndView addBookk(@ModelAttribute Book book, @RequestParam MultipartFile front,@RequestParam MultipartFile back, HttpServletRequest req, HttpSession session) {
 			
 			if(session.getAttribute("user") != null) {
-				
-				String frontName = front.getOriginalFilename();
-				String backName = back.getOriginalFilename();
-				String filePath = req.getSession().getServletContext().getRealPath("/");
-				filePath = "userBooks\\";
-				book.setFrontImage(frontName);
-				book.setBackImage(backName);
-				
-				int originalPrice = book.getOriginalPrice();
-				int sellingPrice = book.getSellingPrice();
-				int discount =  ( (originalPrice - sellingPrice) * 100 ) / originalPrice;
-				book.setDiscount(discount);
-				
 				try {
-					byte f[] = front.getBytes();
-					byte b[] = back.getBytes();
-					BufferedOutputStream frontImage = new BufferedOutputStream(new FileOutputStream(filePath+"\\"+frontName));
-					BufferedOutputStream backImage = new BufferedOutputStream(new FileOutputStream(filePath+"\\"+backName));
-					frontImage.write(f);
-					backImage.write(b);
-			        frontImage.close();
-			        backImage.close();
-			        
-			        bookDAO.addBook(book);
+					Map config = new HashMap();
+					config.put("cloud_name", "bookshare123");
+					config.put("api_key", "826311686619931");
+					config.put("api_secret", "HiON8Lb6uoU5mb4gYZTYGFTNjdo");
+					Cloudinary cloudinary = new Cloudinary(config);
+					
+					Map uploadResultFront = cloudinary.uploader().upload(front.getBytes(), ObjectUtils.emptyMap());
+					Map uploadResultBack = cloudinary.uploader().upload(back.getBytes(), ObjectUtils.emptyMap());
+					
+					String imgurlFront = (String) uploadResultFront.get("url");
+					System.out.println(imgurlFront);
+					
+					String imgurlBack = (String) uploadResultBack.get("url");
+					System.out.println(imgurlBack);
+					
+					book.setFrontImage(imgurlFront);
+					book.setBackImage(imgurlBack);
+
+					
+					int originalPrice = book.getOriginalPrice();
+					int sellingPrice = book.getSellingPrice();
+					int discount =  ( (originalPrice - sellingPrice) * 100 ) / originalPrice;
+					book.setDiscount(discount);
+					
+					bookDAO.addBook(book);
+					return new ModelAndView("redirect:/sell");
 				}
 				catch (Exception e) {
 					e.printStackTrace();
 				}
-				return new ModelAndView("sell");
-				
 			}
 			session.setAttribute("required",true);
 			return new ModelAndView("redirect:/");

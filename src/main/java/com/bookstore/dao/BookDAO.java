@@ -39,6 +39,36 @@ public class BookDAO {
 		}
 		
 		@Transactional
+		public List search(String bookName, Object obj) {
+				long userId = Long.parseLong(obj.toString());
+				Session session = sessionFactory.getCurrentSession();
+				
+				//remove user own books
+				Query q = session.createQuery("from Book where user = "+userId);
+				List<Book> rm = q.list();
+				
+				//remove user orders
+				q = session.createQuery("from Order where user = "+userId);
+				List<Order> orders = q.list();
+				for(Order o:orders) {
+					rm.add(o.getBook());
+				}
+				
+				//remove user wishlist
+				q = session.createQuery("from Wishlist where user = "+userId);
+				List<Wishlist> wishlist = q.list();
+				for(Wishlist w:wishlist) {
+					rm.add(w.getBook());
+				}
+				
+				q = session.createQuery("from Book where bookName like '%"+bookName+"%'");
+				List<Book> bookList = q.list();
+				
+				bookList.removeAll(rm);
+				return bookList;
+		}
+		
+		@Transactional
 		public void deleteBook(Book book) {
 				Session session = sessionFactory.getCurrentSession();
 				session.delete(book);

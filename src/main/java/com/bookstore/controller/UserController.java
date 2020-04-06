@@ -25,15 +25,11 @@ public class UserController {
 		
 		@RequestMapping(value = "/addUser", method = RequestMethod.POST)
 		private ModelAndView index(@ModelAttribute User user, HttpSession session) {
-			if(session.getAttribute("user") != null) {
-				userDAO.addUser(user);
-				user = (User)userDAO.login(user.getEmail(),user.getPassword()).get(0);
-				long userId = user.getUserId();
-				session.setAttribute("user", userId);
-				return new ModelAndView("home");
-			}
-			session.setAttribute("required",true);
-			return new ModelAndView("redirect:/");
+			userDAO.addUser(user);
+			user = (User)userDAO.login(user.getEmail(),user.getPassword()).get(0);
+			long userId = user.getUserId();
+			session.setAttribute("user", userId);
+			return new ModelAndView("redirect:/login");
 		}
 		
 		@RequestMapping(value = "/editUser", method = RequestMethod.GET)
