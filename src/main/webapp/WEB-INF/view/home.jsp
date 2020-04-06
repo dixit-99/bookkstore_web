@@ -209,7 +209,7 @@
 	</c:if>
 	<c:if test="${sessionScope.bookList.size() eq 0}">
 		<div class="row justify-content-center wow fadeInUp">
-			<img src="resources/img/emptyBookList.svg">
+			<img src="img/emptyBookList.svg">
 		</div>
 		
 		<div class="row justify-content-center wow fadeInUp" style="font-size: 30px;margin-right: 10px; margin-top: 15px;">
