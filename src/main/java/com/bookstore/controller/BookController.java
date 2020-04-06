@@ -284,7 +284,7 @@ public class BookController {
 					book.setDiscount(discount);
 					
 					bookDAO.addBook(book);
-					return new ModelAndView("redirect:/sell");
+					return new ModelAndView("sell");
 				}
 				catch (Exception e) {
 					e.printStackTrace();
