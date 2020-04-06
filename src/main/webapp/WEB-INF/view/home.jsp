@@ -117,6 +117,25 @@
 				htp.open("get","/rmWish?userId="+userId+"&bookId="+bookId,true);
 				htp.send();
 			}
+			
+			function search(bookName) {
+				var htp=new XMLHttpRequest();
+				htp.onreadystatechange=function(){
+					if(htp.readyState==4){
+						$("#here").load(" #here > *");
+					}
+				}
+				htp.open("get","/search?bookName="+bookName,true);
+				htp.send();
+			}
+			
+			function cancel() {
+				$(".collapse").collapse('hide');
+				document.getElementById("searchText").value = "";
+				var htp=new XMLHttpRequest();
+				htp.open("get","/home",true);
+				htp.send();
+			}
 		</script>
 </head>
 <body>
@@ -127,11 +146,28 @@
 	<div class="row justify-content-center">
 		<div class="col-md-5">
 			<div class="row filter">
-				<div class="col-md-6" data-toggle="modal" data-target="#sort"> <i class="fa fa-sort"></i> Sort </div>
-				<div class="col-md-6" data-toggle="modal" data-target="#filter"> <i class="fa fa-filter"></i> Filter </div>
+				<div class="col-md-4" data-toggle="modal" data-target="#sort"> <i class="fa fa-sort"></i> Sort </div>
+				<div class="col-md-4" data-toggle="collapse" data-target="#search"> <i class="fa fa-search"></i> Search </div>
+				<div class="col-md-4" data-toggle="modal" data-target="#filter"> <i class="fa fa-filter"></i> Filter </div>
 			</div>
 		</div>
 	</div>
+	
+	<div class="row justify-content-center" style="margin-top: 10px; margin-bottom: -15px;">
+		<div id="search" class="collapse col-md-5">
+			<div class="form-group">
+	         	<div class="input-group mb-3">
+		            <input type="text" class="form-control" id="searchText" placeholder="Enter Book Name Here..." onkeyup="search(this.value)">
+	            	<div class="input-group-btn">
+	   					<button class="btn btn-primary reveal" type="button" onclick="cancel()">
+	   						Cancel
+	   					</button>
+	 				</div>
+            	</div>
+	   	 	</div>
+		</div>
+	</div>
+	 
 	<div class="d2"></div>
 	
 	<div id="here">
@@ -164,8 +200,8 @@
 				</div>
 				
 				<div class="imgDiv col-md-1">
-					<img id="h${cnt.count}" src="img/heart.svg" alt="BookImage" style="height: 25px; margin-left: -80px; margin-top: 15px;" onclick="addWish(${sessionScope.user},${book.bookId},'h${cnt.count}','w${cnt.count}')">
-					<img id="w${cnt.count}" src="img/wishlist.svg" alt="BookImage" style="height: 25px; margin-left: -80px; margin-top: 15px; display: none" onclick="rmWish(${sessionScope.user},${book.bookId},'h${cnt.count}','w${cnt.count}')">
+					<img id="h${cnt.count}" src="resources/img/heart.svg" alt="BookImage" style="height: 25px; margin-left: -80px; margin-top: 15px;" onclick="addWish(${sessionScope.user},${book.bookId},'h${cnt.count}','w${cnt.count}')">
+					<img id="w${cnt.count}" src="resources/img/wishlist.svg" alt="BookImage" style="height: 25px; margin-left: -80px; margin-top: 15px; display: none" onclick="rmWish(${sessionScope.user},${book.bookId},'h${cnt.count}','w${cnt.count}')">
 				</div>
 			</div>
 		</div>
@@ -173,7 +209,7 @@
 	</c:if>
 	<c:if test="${sessionScope.bookList.size() eq 0}">
 		<div class="row justify-content-center wow fadeInUp">
-			<img src="img/emptyBookList.svg">
+			<img src="resources/img/emptyBookList.svg">
 		</div>
 		
 		<div class="row justify-content-center wow fadeInUp" style="font-size: 30px;margin-right: 10px; margin-top: 15px;">
