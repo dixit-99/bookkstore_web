@@ -91,7 +91,7 @@
 					
 					<div class="imgDiv col-md-1">
 						<acronym title="Delete The Book"><img src="img/delete.svg" style="height: 25px; margin-left: -80px; margin-top: 15px;" onclick="deleteBook(${book.bookId})"><br></acronym>
-						<acronym title="Edit Book Details"><%-- <a href="/editBook?bookId=${book.bookId}"> --%><img src="img/editBook.svg" style="height: 30px; margin-left: -75px; margin-top: 7px;")"><!-- </a> --></acronym>
+						<acronym title="Edit Book Details"><a href="/editBook?bookId=${book.bookId}"><img src="img/editBook.svg" style="height: 30px; margin-left: -75px; margin-top: 7px;")"></a></acronym>
 						
 						<c:if test="${book.status eq true}">
 							<acronym title="Mark As Sold"><img src="img/sold.svg" style="height: 30px; margin-left: -75px; margin-top: 30px;")" onclick="sold(${book.bookId})"></acronym>
