@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
@@ -16,13 +17,11 @@
 		<script type="text/javascript">
 			function show() {
 				document.getElementById("password").type = 'text';
-				document.getElementById("confirmPassword").type = 'text';
 				document.getElementById("show1").style.display = 'none';
 				document.getElementById("hide1").style.display = 'inline';
 			}
 			function hide() {
 				document.getElementById("password").type = 'password';
-				document.getElementById("confirmPassword").type = 'password';
 				document.getElementById("show1").style.display = 'inline';
 				document.getElementById("hide1").style.display = 'none';
 			}
@@ -32,11 +31,26 @@
 <div class="container">
 
 		<!-- ***** Header ***** -->
-        <div class="row bg-primary" style="height: 70px; font-size: 30px;color: white;">
-            <div class="col" style="text-align: center; padding-top: 15px;">
-                BOOKSTORE - SIGN UP
-            </div>
-        </div>
+		<c:if test="${(sessionScope.edit ne true)}">
+        <div class="container">
+		      <div class="row bg-primary" style="height: 58px; font-size: 34px;color: white; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+		          <div class="col" style="text-align: center; padding-top: 5px;">
+		              BOOKSTORE - REGISTER
+		          </div>
+		      </div>
+		</div>
+		</c:if>
+		
+		<c:if test="${!(sessionScope.edit ne true)}">
+        <div class="container">
+		      <div class="row bg-primary" style="height: 58px; font-size: 34px;color: white; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+		          <div class="col" style="text-align: center; padding-top: 5px;">
+		              BOOKSTORE - EDIT DETAILS
+		          </div>
+		      </div>
+		</div>
+		</c:if>
+		
 		
 		<form:form action="/addUser" method="post" modelAttribute="user">
 		
@@ -68,17 +82,6 @@
       						</div>
 		                </div>
 		             </div>
-	            </div>
-	            <div class="col-md-3"></div>
-	        </div>
-	        
-	        <div class="row">
-	        	<div class="col-md-3"></div>
-	            <div class="col-md-6">
-	                <div class="form-group">
-	                    <label for="confirmPassword">Confirm Password :</label>
-	                    <input type="password" class="form-control" id="confirmPassword">
-	                </div>
 	            </div>
 	            <div class="col-md-3"></div>
 	        </div>
@@ -152,13 +155,24 @@
                 <div class="col-md-2">
                     <center><input type="reset" type="button" class="btn btn-outline-danger"></center>
                 </div>
+                
+                <c:if test="${(sessionScope.edit ne true)}">
                 <div class="col-md-2">
                     <center><input type="submit" value="Sign Up" type="button" class="btn btn-outline-primary"></center>
                 </div>
+                </c:if>
+                
+                <c:if test="${!(sessionScope.edit ne true)}">
+                <div class="col-md-2">
+                    <center><input type="submit" value="Update" type="button" class="btn btn-outline-primary"></center>
+                </div>
+                </c:if>
+                
                 <div class="col-md-4"></div>
             </div>
 	      
 		</form:form>
+		<c:remove var="edit" scope="session"/>
 </div>
 </body>
 </html>

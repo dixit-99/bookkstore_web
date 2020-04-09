@@ -148,6 +148,7 @@ public class BookController {
 		private ModelAndView editBook(@RequestParam long bookId, HttpSession session) {
 			if(session.getAttribute("user") != null) {
 				Book book = (Book)bookDAO.getBook(bookId).get(0);
+				session.setAttribute("edit", true);
 				return new ModelAndView("addBook","book",book);
 			}
 			session.setAttribute("required",true);

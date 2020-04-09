@@ -1,13 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <!DOCTYPE html>
 <html>
 <head>
 	<meta charset="ISO-8859-1">
 	<title>Bookstore - Add Book</title>
 	<jsp:include page="head.jsp"></jsp:include>
-	<script src="js/addBook.js"></script>
+	<script src="resources/js/addBook.js"></script>
 	<style>
         body {
             font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
@@ -26,12 +27,22 @@
         <!-- ***** Two Image ***** -->
         <div class="row" style="margin-top: 15px;">
             <div class="col-md-2"></div>
-            <div class="col-md-3 wow fadeInLeft" style="border: 1px solid cornflowerblue;">
-                <img id="f" src="img/front.jpg" style="height: 300px; width: 100%;">
+            <div class="col-md-3 wow fadeInLeft">
+            	<c:if test="${(sessionScope.edit ne true)}">
+            		<img id="f" src="img/front.jpg" style="height: 300px; width: 100%;">
+            	</c:if>
+            	<c:if test="${!(sessionScope.edit ne true)}">
+                	<img id="f" src="${book.frontImage}" style="height: 300px; width: 100%;">
+                </c:if>
             </div>
             <div class="col-md-2"></div>
-            <div class="col-md-3 wow fadeInRight" style="border: 1px solid cornflowerblue;">
-                <img id="b" src="img/back.jpg" style="height: 300px; width: 100%;">
+            <div class="col-md-3 wow fadeInRight">
+            	<c:if test="${(sessionScope.edit ne true)}">
+            		<img id="b" src="img/back.jpg" style="height: 300px; width: 100%;">
+            	</c:if>
+            	<c:if test="${!(sessionScope.edit ne true)}">
+                	<img id="b" src="${book.backImage}" style="height: 300px; width: 100%;">
+                </c:if>
             </div>
             <div class="col-md-2"></div>
         </div>
@@ -203,5 +214,5 @@
 	<script>
 		new WOW().init();
 	</script>
-
+	<c:remove var="edit" scope="session"/>
 </html>

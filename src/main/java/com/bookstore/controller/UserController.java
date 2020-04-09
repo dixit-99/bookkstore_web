@@ -36,6 +36,7 @@ public class UserController {
 		private ModelAndView editUser(@RequestParam long userId, HttpSession session) {
 			if(session.getAttribute("user") != null) {
 				User user = (User)userDAO.getUser(userId).get(0);
+				session.setAttribute("edit", true);
 				return new ModelAndView("signup","user",user);
 			}
 			session.setAttribute("required",true);
