@@ -133,6 +133,11 @@
 				$(".collapse").collapse('hide');
 				document.getElementById("searchText").value = "";
 				var htp=new XMLHttpRequest();
+				htp.onreadystatechange=function(){
+					if(htp.readyState==4){
+						$("#here").load(" #here > *");
+					}
+				}
 				htp.open("get","/home",true);
 				htp.send();
 			}
